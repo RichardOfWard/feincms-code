@@ -1,3 +1,4 @@
+from __future__ import absolute_import, unicode_literals
 import datetime
 from django.conf import settings
 
@@ -31,5 +32,10 @@ call_command('syncdb', interactive=False)
 
 
 class CodeCase(TestCase):
-    def test_test(self):
-        assert False
+    def test_python(self):
+        cc = CodeContent(code="import test", language="python")
+        self.assertEqual(
+            cc.html(),
+            """<div class="highlight"><pre><span class="kn">import</span> """
+            + """<span class="nn">test</span>\n</pre></div>\n"""
+        )

@@ -11,6 +11,6 @@ setup(
     author='Richard Ward',
     author_email='richard@richard.ward.name',
     url='https://github.com/RichardOfWard/feincms-code',
-    install_requires=['django', 'feincms', 'feincms-template-content'],
+    install_requires=['django', 'feincms', 'feincms-template-content', 'pygments'],
     test_suite='tests',
 )

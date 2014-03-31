@@ -4,6 +4,10 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from feincms_template_content.models import TemplateContent
 
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, get_all_lexers, guess_lexer
+from pygments.formatters import HtmlFormatter
+
 
 @python_2_unicode_compatible
 class CodeContent(TemplateContent):
@@ -13,6 +17,30 @@ class CodeContent(TemplateContent):
         verbose_name_plural = 'codes'
 
     code = models.TextField(_("code"), blank=True)
+    language = models.CharField(
+        _("language"),
+        choices = (
+            (l[0], l[0]) for l in get_all_lexers()
+        ),
+    )
+
+    _html = None
+
+    def html(self):
+        if self._html is None:
+            self._html = highlight(
+                self.code,
+                self.get_lexer(),
+                self.get_formatter(),
+            )
+
+        return self._html
+
+    def get_lexer(self):
+        return get_lexer_by_name(self.language)
+
+    def get_formatter(self):
+        return HtmlFormatter()
 
     def __str__(self):
         return u"code"
