@@ -8,6 +8,11 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, get_all_lexers, guess_lexer
 from pygments.formatters import HtmlFormatter
 
+LANGUAGE_CHOICES = list(
+    (l[1][0], l[0]) for l in get_all_lexers()
+)
+LANGUAGE_CHOICES.sort(key=lambda l: l[0])
+LANGUAGE_CHOICES = tuple(LANGUAGE_CHOICES)
 
 @python_2_unicode_compatible
 class CodeContent(TemplateContent):
@@ -16,13 +21,12 @@ class CodeContent(TemplateContent):
         verbose_name = 'code'
         verbose_name_plural = 'codes'
 
-    code = models.TextField(_("code"), blank=True)
     language = models.CharField(
         _("language"),
-        choices = (
-            (l[0], l[0]) for l in get_all_lexers()
-        ),
+        max_length=255,
+        choices = LANGUAGE_CHOICES,
     )
+    code = models.TextField(_("code"), blank=True)
 
     _html = None
 
